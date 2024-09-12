@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dotnet-namespace
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-deployment
+  namespace: dotnet-namespace
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dotnet-app
+  template:
+    metadata:
+      labels:
+        app: dotnet-app
+    spec:
+      containers:
+      - name: dotnet-container
+        image: abhijithdockerhub/dotnet:latest
+        ports:
+        - containerPort: 80
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dotnet-service
+  namespace: dotnet-namespace
+spec:
+  selector:
+    app: dotnet-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+
